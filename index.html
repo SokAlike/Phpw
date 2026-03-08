@@ -1,0 +1,1554 @@
+<!DOCTYPE html><html lang="en"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>ALTRIX BOT - Dashboard</title>
+    <style>
+* {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body { 
+    margin: 0; 
+    font-family: Arial, sans-serif; 
+    background: #0a0a0a; 
+    color: #fff; 
+    overflow: hidden;
+    -webkit-overflow-scrolling: touch;
+}
+
+
+
+
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes scaleUp {
+    0% {
+        transform: scale(0);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Logout Confirmation Modal */
+.logout-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 99999;
+    animation: fadeIn 0.3s ease;
+}
+
+.logout-modal.show {
+    display: flex;
+}
+
+.logout-modal-content {
+    background: linear-gradient(135deg, #1a1a2e, #2e1a1a);
+    border-radius: 20px;
+    padding: 40px;
+    max-width: 400px;
+    width: 90%;
+    border: 3px solid #ff6b6b;
+    box-shadow: 0 20px 60px rgba(255, 107, 107, 0.5);
+    text-align: center;
+    animation: slideUp 0.4s ease;
+}
+
+.logout-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 20px;
+    background: #ff6b6b;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: scaleUp 0.5s ease;
+}
+
+.logout-icon svg {
+    width: 50px;
+    height: 50px;
+}
+
+.logout-title {
+    font-size: 26px;
+    font-weight: bold;
+    color: #ff6b6b;
+    margin-bottom: 15px;
+}
+
+.logout-message {
+    font-size: 16px;
+    color: #bfc5d2;
+    margin-bottom: 30px;
+}
+
+.logout-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
+.logout-confirm-btn {
+    background: #ff6b6b;
+    color: white;
+    border: none;
+    padding: 14px 30px;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.logout-confirm-btn:hover {
+    background: #ff5252;
+    transform: scale(1.05);
+}
+
+.logout-cancel-btn {
+    background: #333;
+    color: white;
+    border: none;
+    padding: 14px 30px;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.logout-cancel-btn:hover {
+    background: #555;
+    transform: scale(1.05);
+}
+
+/* Video Timeline Controls */
+.video-timeline {
+    display: none;
+    padding: 15px;
+    background: rgba(0, 0, 0, 0.8);
+    border-radius: 10px;
+    margin: 10px 0;
+}
+
+.video-timeline.show {
+    display: block;
+}
+
+.timeline-label {
+    color: #4caf50;
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    display: block;
+}
+
+.timeline-slider {
+    width: 100%;
+    height: 6px;
+    border-radius: 3px;
+    background: #333;
+    outline: none;
+    -webkit-appearance: none;
+    appearance: none;
+    cursor: pointer;
+}
+
+.timeline-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #4caf50;
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
+}
+
+.timeline-slider::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #4caf50;
+    cursor: pointer;
+    border: none;
+    box-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
+}
+
+.timeline-time {
+    display: flex;
+    justify-content: space-between;
+    color: #888;
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+.app-container {
+    width: 100vw;
+    height: 100vh;
+    background: #111;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.app-header {
+    padding: 16px;
+    background: linear-gradient(135deg, #1b1b1b, #162216);
+    text-align: center;
+    font-weight: bold;
+    font-size: 20px;
+    color: #4caf50;
+    flex-shrink: 0;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.logout-btn {
+    position: fixed;
+    top: 8px;
+    right: 12px;
+    background: #ff4444;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: bold;
+    z-index: 99999;
+    transition: all 0.3s;
+    box-shadow: 0 2px 8px rgba(255, 68, 68, 0.3);
+}
+
+.logout-btn:hover {
+    background: #ff2222;
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(255, 68, 68, 0.5);
+}
+
+.app-content {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    -webkit-overflow-scrolling: touch;
+}
+
+.banner-section {
+    width: 100%;
+    height: 80px;
+    background: black;
+    overflow: hidden;
+    border-radius: 8px;
+    flex-shrink: 0;
+}
+
+.banner-section img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.market-select {
+    display: flex;
+    flex-direction: row;
+    column-gap: 10px;
+    border-radius: 10px;
+    align-items: center;
+    row-gap: 3px;
+}
+.market-label {
+    font-size: 15px;
+    font-weight: 500;
+    color: #bfc5d2;
+    letter-spacing: 0.02em;
+    width: 100%;
+}
+.market-current-left .otc-select {
+    color: #3fdce5;
+    font-weight: 600;
+}
+.market-current {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    background: transparent;
+    color: #f5f5f5;
+    cursor: pointer;
+    transition: background 0.15s ease, border-color 0.15s ease, transform 0.05s ease;
+    touch-action: manipulation;
+    gap: 3px;
+    padding: 0;
+    border: 0;
+}
+.market-current:active {
+    transform: scale(0.98);
+}
+
+.market-current-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.market-flags {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.flag {
+    width: 35px;
+    height: 35px;
+    overflow: hidden;
+    flex-shrink: 0;
+    border-radius: 8px;
+}
+.flag-select {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.market-text {
+    font-size: 13px;
+    font-weight: 500;
+    color: #f5f5f5;
+    white-space: nowrap;
+}
+
+.market-caret {
+    font-size: 12px;
+    color: #8e9bb5;
+}
+
+.market-list {
+    margin-top: 8px;
+    padding: 6px;
+    border-radius: 8px;
+    background: #05070b;
+    border: 1px solid #252525;
+    display: none;
+    flex-direction: column;
+    gap: 4px;
+    max-height: 200px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.market-list.is-open {
+    display: flex;
+}
+
+.market-item {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 10px;
+    border-radius: 7px;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: #e5e7eb;
+    cursor: pointer;
+    transition: background 0.12s ease, transform 0.04s ease;
+    touch-action: manipulation;
+    justify-content: space-between;
+    gap: 5px;
+}
+span.flag-select-img {
+    max-height: 20px;
+}
+.market-item:hover {
+    background: #171c25;
+}
+
+.market-item:active {
+    transform: scale(0.98);
+}
+
+.market-item.active {
+    background: #0b5cff;
+    color: #ffffff;
+}
+
+.status {
+    background: #1b4f2d;
+    padding: 12px;
+    text-align: center;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+/* .video-section {
+    flex: 1;
+    min-height: 250px;
+    position: relative;
+    background: #000;
+    border-radius: 8px;
+    overflow: hidden;
+} */ 
+.video-section {
+    flex: 2;  /* Makes it take more space than before (was flex:1) */
+    min-height: 180px;  /* Increase minimum height for better visibility on larger screens */
+    position: relative;
+    background: #000;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+/* .video-section video {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    background: #000;
+} */
+.video-section video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;  /* Crops to fill exactly; change to 'contain' if you want full video visible with black bars */
+    background: #000;
+}
+
+@media (max-width: 768px) {
+    .video-section {
+        aspect-ratio: 9 / 16;
+        height: auto;
+        max-height: 70vh;  /* Limits to 70% of viewport height to avoid overflow */
+    }
+}
+
+.video-loading {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #4caf50;
+    font-size: 16px;
+    z-index: 10;
+}
+
+.video-placeholder {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #666;
+    padding: 20px;
+    text-align: center;
+    font-size: 14px;
+}
+
+.confidence {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 0;
+}
+
+.confidence-label {
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+.progress-bar {
+    flex: 1;
+    height: 12px;
+    background: #333;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.progress {
+    height: 100%;
+    width: 99%;
+    background: #4caf50;
+    border-radius: 6px;
+}
+
+.confidence-value {
+    color: #4caf50;
+    font-weight: bold;
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+.menu-section {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding-bottom: 16px;
+}
+
+.menu-button {
+    background: #1b1b1b;
+    border: none;
+    color: white;
+    padding: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background 0.2s ease;
+    touch-action: manipulation;
+    width: 100%;
+}
+
+.menu-button:hover {
+    background: #333;
+}
+
+.menu-button:active {
+    transform: scale(0.98);
+}
+
+.upload-progress {
+    display: none;
+    color: #4caf50;
+}
+.banner-section {
+    background: transparent;
+}
+.app-content .app-header {
+    background: transparent;
+    font-size: 20px;
+    padding: 0px;
+}
+.app-content .market-select {
+    border: 0;
+    background: transparent;
+    padding: 0;
+    box-shadow: unset;
+    position: relative;
+    flex-wrap: wrap;
+}
+.app-content .market-select .market-list {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    z-index: 9;
+}
+.select-option-1 {
+    position: relative;
+}
+
+/* toggle */
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 45px;
+    height: 20px;
+}
+
+.switch input { 
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 1px;
+    bottom: 2px;
+    background-color: #000;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #4caf50;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #4caf50;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+.inner-market-select {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    background: #131e30;
+    padding: 12px;
+    border-radius: 20px;
+    border: 2px solid #232e4f;
+}
+
+.platform-select {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+}
+
+.platform-label {
+    font-size: 15px;
+    font-weight: 500;
+    color: #bfc5d2;
+    letter-spacing: 0.02em;
+}
+
+.platform-options {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+}
+
+.platform-option {
+    background: #1a1a1a;
+    border: 2px solid #333;
+    border-radius: 10px;
+    padding: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    aspect-ratio: 1;
+}
+
+.platform-option:hover {
+    border-color: #555;
+    transform: scale(1.05);
+}
+
+.platform-option.active {
+    border-color: #4caf50;
+    background: #1b2e1b;
+    box-shadow: 0 0 10px rgba(76, 175, 80, 0.3);
+}
+
+.platform-option img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.broker-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.broker-modal.active {
+    display: flex;
+}
+
+.broker-modal-content {
+    background: #1a1a2e;
+    border-radius: 15px;
+    padding: 20px;
+    max-width: 90%;
+    width: 400px;
+    border: 2px solid #4caf50;
+}
+
+.broker-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.broker-modal-title {
+    font-size: 18px;
+    font-weight: bold;
+    color: #4caf50;
+}
+
+.broker-modal-close {
+    background: #333;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.broker-modal-close:hover {
+    background: #555;
+}
+
+.broker-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.broker-item {
+    background: #0c1826;
+    border: 2px solid #333;
+    border-radius: 10px;
+    padding: 12px 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: #fff;
+    font-size: 15px;
+    text-align: left;
+}
+
+.broker-item:hover {
+    border-color: #4caf50;
+    background: #162216;
+    transform: translateX(5px);
+}
+
+.broker-item.selected {
+    border-color: #4caf50;
+    background: #1b2e1b;
+}
+
+.market-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    flex: 1;
+}
+
+span.market-text.one-m {
+    color: #e6670f;
+}
+.flag img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 8px;
+}
+span.flag-select-img img {
+    max-width: 30px;
+}
+.app-container {
+    background: #0c1826;
+}
+
+
+
+        /* Desktop styles */
+        @media (min-width: 769px) {
+.app-container {
+    position: fixed;
+    top: 50px;
+    left: 50%;
+    max-width: 380px;
+    height: 675px;
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8);
+    border: 1px solid #333;
+    transform: translateX(-50%);
+}
+            
+.app-header {
+    cursor: grab;
+    user-select: none;
+}
+
+.app-header:active {
+    cursor: grabbing;
+}
+
+.banner-section {
+    height: 70px;
+}
+
+.menu-button {
+    padding: 14px;
+    font-size: 15px;
+}
+.app-content .app-header {
+    font-size: 20px;
+    padding: 0;
+}
+        }
+        
+/* Tablet styles */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .app-container {
+        width: calc(100vw - 40px);
+        height: calc(100vh - 40px);
+    }
+}
+
+.market-list::-webkit-scrollbar {
+    width: 4px;
+}
+
+.market-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.market-list::-webkit-scrollbar-thumb {
+    background: #283243;
+    border-radius: 999px;
+}
+
+.spinner {
+    border: 4px solid #333;
+    border-top: 4px solid #4caf50;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.history-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.history-modal.active {
+    display: flex;
+}
+
+.history-modal-content {
+    background: #1a1a2e;
+    border-radius: 15px;
+    padding: 20px;
+    max-width: 90%;
+    width: 450px;
+    max-height: 80vh;
+    overflow-y: auto;
+    border: 2px solid #4caf50;
+}
+
+.history-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #333;
+}
+
+.history-modal-title {
+    font-size: 20px;
+    font-weight: bold;
+    color: #4caf50;
+}
+
+.history-modal-close {
+    background: #333;
+    color: white;
+    border: none;
+    padding: 5px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.history-modal-close:hover {
+    background: #555;
+}
+
+.history-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.history-item {
+    background: #0c1826;
+    border: 2px solid #1b4f2d;
+    border-radius: 10px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.history-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.history-item-time {
+    font-size: 12px;
+    color: #888;
+}
+
+.history-item-status {
+    background: #1b4f2d;
+    color: #4caf50;
+    padding: 4px 12px;
+    border-radius: 5px;
+    font-weight: bold;
+    font-size: 13px;
+}
+
+.history-item-details {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 8px;
+    border-top: 1px solid #333;
+}
+
+.history-item-pair {
+    font-size: 15px;
+    color: #fff;
+    font-weight: 600;
+}
+
+</style>
+</head>
+<body>
+
+
+    <!-- Logout Confirmation Modal -->
+    <div class="logout-modal" id="logoutModal">
+        <div class="logout-modal-content">
+            <div class="logout-icon">
+                <svg viewBox="0 0 24 24" fill="white">
+                    <path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"></path>
+                </svg>
+            </div>
+            <h2 class="logout-title">Logout Confirmation</h2>
+            <p class="logout-message">Are you sure you want to logout from ALTRIX BOT?</p>
+            <div class="logout-buttons">
+                <button class="logout-confirm-btn" id="logoutConfirmBtn">Yes, Logout</button>
+                <button class="logout-cancel-btn" id="logoutCancelBtn">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="app-container" id="appContainer">
+        <div class="app-content">
+            <div class="banner-section">
+                <img src="/images/1000157043-removebg-preview.png" alt="Trader Raj" onerror="this.style.display='none'">
+            </div>
+            <div class="app-header" id="appHeader">
+                <button class="logout-btn" id="logoutBtn">Logout</button>
+                <img src="mylogo.jpg" alt="Logo" style="max-width: 150px; height: auto; margin-bottom: 2px; margin-top: -15px;" onerror="this.style.display='none'">
+                <div>ALTRIX BOT</div>
+            </div>
+            <!-- History Modal -->
+            <div class="history-modal" id="historyModal">
+                <div class="history-modal-content">
+                    <div class="history-modal-header">
+                        <h3 class="history-modal-title">Trading History</h3>
+                        <button class="history-modal-close" id="closeHistoryModal">✕</button>
+                    </div>
+                    <div class="history-list" id="historyList">
+                        <!-- History items will be dynamically added here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Broker Selection Modal -->
+            <div class="broker-modal" id="brokerModal">
+                <div class="broker-modal-content">
+                    <div class="broker-modal-header">
+                        <h3 class="broker-modal-title">Select Broker</h3>
+                        <button class="broker-modal-close" id="closeBrokerModal">✕</button>
+                    </div>
+                    <div class="broker-list" id="brokerList">
+                        <!-- Broker options will be dynamically added here -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="main-market-select">
+                <div class="inner-market-select">
+                    <!-- Market Selection Row -->
+                    <div class="market-row">
+                    <div class="flag-select">
+                        <div class="flag" id="platformIconClick" style="cursor: pointer;" title="Click to change platform">
+                            <img id="selectedPlatformIcon" src="quotex.png" alt="Selected Platform">
+                        </div>
+                        <div class="market-select">
+                        <label class="market-label">Market:</label>
+                        <div class="select-option-1">
+                            <button type="button" class="market-current" id="marketCurrent">
+                                <span class="market-current-left">
+                                    <span class="market-text otc-select" id="marketText">GBP/USD (OTC)</span>
+                                </span>
+                                <span class="market-caret">▼</span>
+                            </button>
+                            <input type="hidden" name="market" id="marketInput" value="GBP/USD (OTC)">
+                            
+                            <div class="market-list" id="marketList">
+                                <button class="market-item" data-value="USD/BRL (OTC)">
+                                    <span class="market-text">USD/BRL (OTC)</span>                              
+                                </button>
+                                
+                                <button class="market-item active" data-value="USD/INR (OTC)">
+                                    <span class="market-text">USD/INR (OTC)</span>
+                                </button>
+                                
+                                <button class="market-item" data-value="USD/BDT (OTC)">
+                                    <span class="market-text">USD/BDT (OTC)</span>
+                                </button>
+                                
+                                <button class="market-item" data-value="USD/MXN (OTC)">
+                                    <span class="market-text">USD/MXN (OTC)</span>
+                                </button>
+                                
+                                <button class="market-item" data-value="USD/ARS (OTC)">
+                                    <span class="market-text">USD/ARS (OTC)</span>
+                                </button>
+                                
+                                <button class="market-item" data-value="USD/PKR (OTC)">
+                                    <span class="market-text">USD/PKR (OTC)</span>
+                                </button>
+                                
+                                <button class="market-item" data-value="USD/IDR (OTC)">
+                                    <span class="market-text">USD/IDR (OTC)</span>
+                                </button>
+                                
+                                <button class="market-item" data-value="NZD/USD (OTC)">
+                                    <span class="market-text">NZD/USD (OTC)</span>
+                                </button>
+                                
+                                <button class="market-item" data-value="EUR/GBP (OTC)">
+                                    <span class="market-text">EUR/GBP (OTC)</span>
+                                </button>
+                            </div>
+                        </div>
+                        <span>-</span>
+
+                        <div class="select-option-1">
+                            <button type="button" class="market-current" id="marketCurrent1">
+                                <span class="market-current-left">
+                                    
+                                    <span class="market-text one-m" id="timeText">1M</span>
+                                </span>
+                                <span class="market-caret">▼</span>
+                            </button>
+                            <input type="hidden" name="market" id="marketInput" value="GBP/USD (OTC)">
+                            
+                            <div class="market-list" id="marketList-new">
+                                <button class="market-item market-item-1" data-value="USD/INR (OTC)">
+                                
+                                    <span class="market-text">15 Sec</span>
+                                </button>
+                                
+                                <button class="market-item market-item-1" data-value="GBP/USD (OTC)">
+                                    
+                                    <span class="market-text">30 Sec</span>
+                                </button>
+                                
+                                <button class="market-item market-item-1" data-value="USD/MXN (OTC)">
+                                
+                                    <span class="market-text">1M</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    </div><!-- end market-row -->
+                    
+                    <div class="switch-toggle">
+                        <label class="switch">
+                            <input type="checkbox" id="videoToggle" checked="">
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="video-section">
+            <video id="mainVideo" autoplay="" loop="" muted="" playsinline="">
+                <source src="" type="video/mp4">
+            </video>
+            <div class="video-placeholder" id="videoPlaceholder">
+                No video uploaded yet.<br>Click "Signal" to add one.
+            </div>
+            <div class="video-loading" id="videoLoading" style="display: none;">
+                <div style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
+                    <div class="spinner"></div>
+                    <div>Network Error</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Video Timeline Controls -->
+        <div class="video-timeline" id="videoTimeline">
+            <label class="timeline-label">⏱️ Video Timeline Control</label>
+            <input type="range" class="timeline-slider" id="timelineSlider" min="0" max="100" value="0" step="0.1">
+            <div class="timeline-time">
+                <span id="currentTime">0:00</span>
+                <span id="totalDuration">0:00</span>
+            </div>
+        </div>
+
+        <div class="confidence">
+            <span class="confidence-label">Confidence Level</span>
+            <div class="progress-bar">
+                <div class="progress" style="width: 100%;"></div>
+            </div>
+            <span class="confidence-value">100%</span>
+        </div>
+
+        <div class="menu-section">
+            <input type="file" id="videoInput" accept="video/*" style="display: none;">
+            <button class="menu-button" id="signalBtn">Signal</button>
+            <button class="menu-button" id="historyBtn">History</button>
+            <button class="menu-button" id="settingsBtn">Settings</button>
+        </div>
+    </div>
+        
+        <input type="file" id="videoUploadInput" accept="video/*" style="display:none;">
+    </div>
+
+    <script>
+        // =================== APP INITIALIZATION ===================
+        const appContainer = document.getElementById('appContainer');
+
+        // Show app directly on load
+        window.addEventListener('DOMContentLoaded', () => {
+            appContainer.style.display = 'flex';
+        });
+
+        // Logout modal functionality
+        const logoutModal = document.getElementById('logoutModal');
+        const logoutConfirmBtn = document.getElementById('logoutConfirmBtn');
+        const logoutCancelBtn = document.getElementById('logoutCancelBtn');
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const logoutBtn = document.getElementById('logoutBtn');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', () => {
+                    logoutModal.classList.add('show');
+                });
+            }
+        });
+
+        logoutConfirmBtn.addEventListener('click', () => {
+            logoutModal.classList.remove('show');
+        });
+
+        logoutCancelBtn.addEventListener('click', () => {
+            logoutModal.classList.remove('show');
+        });
+
+        // =================== MAIN APP CODE ===================
+        const appHeader = document.getElementById('appHeader');
+
+        // Check if device is mobile
+        function isMobile() {
+            return window.innerWidth <= 768;
+        }
+
+        // Drag functionality (desktop only)
+        if (!isMobile()) {
+            let dragging = false, startX, startY, startL, startT;
+
+            const startDrag = e => {
+                dragging = true;
+                startX = e.clientX;
+                startY = e.clientY;
+                startL = appContainer.offsetLeft;
+                startT = appContainer.offsetTop;
+                e.preventDefault();
+            };
+
+            const move = e => {
+                if (dragging) {
+                    appContainer.style.left = (startL + e.clientX - startX) + 'px';
+                    appContainer.style.top = (startT + e.clientY - startY) + 'px';
+                }
+            };
+
+            const stop = () => { dragging = false; };
+
+            appHeader.addEventListener('mousedown', startDrag);
+            document.addEventListener('mousemove', move);
+            document.addEventListener('mouseup', stop);
+        }
+
+        // Market dropdown functionality
+        const currentBtn = document.getElementById('marketCurrent');
+        const currentBtn1 = document.getElementById('marketCurrent1');
+        const listEl = document.getElementById('marketList');
+        const listE2 = document.getElementById('marketList-new');
+        const hiddenInput = document.getElementById('marketInput');
+        const currentText = document.getElementById('marketCurrentText');
+        const currentFlagsBox = document.getElementById('marketCurrentFlags');
+
+        // Platform and Broker selection functionality
+        const platformIconClick = document.getElementById('platformIconClick');
+        const selectedPlatformIcon = document.getElementById('selectedPlatformIcon');
+        const brokerModal = document.getElementById('brokerModal');
+        const brokerList = document.getElementById('brokerList');
+        const closeBrokerModal = document.getElementById('closeBrokerModal');
+        let selectedPlatform = 'quotex';
+        
+        // Broker options for each platform
+        const brokerOptions = {
+            quotex: ['Quotex Pro', 'Quotex Standard', 'Quotex Elite', 'Quotex Premium'],
+            binomo: ['Binomo Gold', 'Binomo Silver', 'Binomo VIP', 'Binomo Expert'],
+            pocketoption: ['Pocket Pro', 'Pocket Standard', 'Pocket Elite', 'Pocket Premium'],
+            binolla: ['Binolla Master', 'Binolla Expert', 'Binolla Advanced', 'Binolla Basic']
+        };
+        
+        // Platform icon paths
+        const platformIcons = {
+            quotex: 'photo/quotex.png',
+            binomo: 'photo/binomo.png',
+            pocketoption: 'photo/pocketoption.jpg',
+            binolla: 'photo/binolla.png'
+        };
+        
+        // Click on flag icon to open platform selection
+        platformIconClick.addEventListener('click', function() {
+            showPlatformSelectionModal();
+        });
+        
+        function showPlatformSelectionModal() {
+            brokerList.innerHTML = '';
+            
+            // Platform names for display
+            const platformNames = {
+                quotex: 'Quotex',
+                binomo: 'Binomo',
+                pocketoption: 'Pocket Option',
+                binolla: 'Binolla'
+            };
+            
+            // Show only 4 platform options
+            Object.keys(platformIcons).forEach(platform => {
+                const platformItem = document.createElement('div');
+                platformItem.className = 'broker-item';
+                platformItem.textContent = platformNames[platform];
+                
+                if (platform === selectedPlatform) {
+                    platformItem.classList.add('selected');
+                }
+                
+                platformItem.addEventListener('click', function() {
+                    selectPlatform(platform, platformNames[platform]);
+                });
+                
+                brokerList.appendChild(platformItem);
+            });
+            
+            brokerModal.classList.add('active');
+        }
+        
+        function selectPlatform(platform, platformName) {
+            selectedPlatform = platform;
+            
+            // Update the main flag icon
+            if (selectedPlatformIcon) {
+                selectedPlatformIcon.src = platformIcons[platform];
+                selectedPlatformIcon.alt = platformName;
+            }
+            
+            console.log('Selected platform:', platformName);
+            
+            // Close modal
+            brokerModal.classList.remove('active');
+        }
+        
+        // Close modal on X button
+        closeBrokerModal.addEventListener('click', function() {
+            brokerModal.classList.remove('active');
+        });
+        
+        // Close modal on outside click
+        brokerModal.addEventListener('click', function(e) {
+            if (e.target === brokerModal) {
+                brokerModal.classList.remove('active');
+            }
+        });
+
+        // Signal button - Video upload functionality
+        const signalBtn = document.getElementById('signalBtn');
+        const videoInput = document.getElementById('videoInput');
+        const mainVideo = document.getElementById('mainVideo');
+        const videoPlaceholder = document.getElementById('videoPlaceholder');
+        const videoLoading = document.getElementById('videoLoading');
+
+        signalBtn.addEventListener('click', function() {
+            videoInput.click();
+        });
+
+        videoInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file && file.type.startsWith('video/')) {
+                // Show loading
+                if (videoLoading) videoLoading.style.display = 'flex';
+                if (videoPlaceholder) videoPlaceholder.style.display = 'none';
+
+                // Create object URL for the video
+                const videoURL = URL.createObjectURL(file);
+                
+                // Set video source
+                mainVideo.src = videoURL;
+                mainVideo.muted = true;
+                mainVideo.autoplay = true;
+                mainVideo.loop = true;
+                
+                // Play video when loaded
+                mainVideo.onloadeddata = function() {
+                    if (videoLoading) videoLoading.style.display = 'none';
+                    mainVideo.play().catch(err => console.log('Autoplay prevented:', err));
+                };
+
+                // Handle errors
+                mainVideo.onerror = function() {
+                    if (videoLoading) videoLoading.style.display = 'none';
+                    if (videoPlaceholder) {
+                        videoPlaceholder.style.display = 'flex';
+                        videoPlaceholder.innerHTML = 'Error loading video.<br>Please try another file.';
+                    }
+                };
+            }
+        });
+
+        // Switch toggle - Video control
+        const videoToggle = document.getElementById('videoToggle');
+        const historyBtn = document.getElementById('historyBtn');
+        const historyModal = document.getElementById('historyModal');
+        const historyList = document.getElementById('historyList');
+        const closeHistoryModal = document.getElementById('closeHistoryModal');
+        
+        // Video timeline elements
+        const settingsBtn = document.getElementById('settingsBtn');
+        const videoTimeline = document.getElementById('videoTimeline');
+        const timelineSlider = document.getElementById('timelineSlider');
+        const currentTime = document.getElementById('currentTime');
+        const totalDuration = document.getElementById('totalDuration');
+        
+        // Format time in mm:ss
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+        }
+        
+        // Settings button now toggles video timeline
+        settingsBtn.addEventListener('click', function() {
+            videoTimeline.classList.toggle('show');
+        });
+        
+        // Update timeline when video metadata loads
+        mainVideo.addEventListener('loadedmetadata', function() {
+            timelineSlider.max = mainVideo.duration;
+            totalDuration.textContent = formatTime(mainVideo.duration);
+        });
+        
+        // Update timeline as video plays
+        mainVideo.addEventListener('timeupdate', function() {
+            if (!timelineSlider.matches(':active')) {
+                timelineSlider.value = mainVideo.currentTime;
+                currentTime.textContent = formatTime(mainVideo.currentTime);
+            }
+        });
+        
+        // Seek video when slider changes
+        timelineSlider.addEventListener('input', function() {
+            mainVideo.currentTime = this.value;
+            currentTime.textContent = formatTime(this.value);
+        });
+        
+        videoToggle.addEventListener('change', function() {
+            if (this.checked) {
+                // Turn ON - Play video
+                if (videoLoading) videoLoading.style.display = 'none';
+                if (mainVideo.src && mainVideo.src !== '') {
+                    mainVideo.play().catch(err => console.log('Play prevented:', err));
+                }
+            } else {
+                // Turn OFF - Stop video and show loading
+                mainVideo.pause();
+                if (videoLoading) videoLoading.style.display = 'flex';
+            }
+        });
+
+        // History Modal functionality
+        historyBtn.addEventListener('click', function() {
+            showHistoryModal();
+        });
+
+        function showHistoryModal() {
+            historyList.innerHTML = '';
+            
+            // Get current selected market
+            const currentMarket = document.getElementById('marketText').textContent;
+            
+            // Get current date and time
+            const now = new Date();
+            
+            // Generate 200 signals - each 1 minute apart going backwards
+            for (let i = 0; i < 200; i++) {
+                const historyItem = document.createElement('div');
+                historyItem.className = 'history-item';
+                
+                // Calculate time - going back 1 minute for each entry
+                const pastTime = new Date(now.getTime() - (i * 60 * 1000)); // 1 minute intervals
+                const todayDate = pastTime.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+                const timeStr = pastTime.toLocaleTimeString('en-US', { 
+                    hour: '2-digit', 
+                    minute: '2-digit',
+                    hour12: false 
+                });
+                
+                historyItem.innerHTML = `
+                    <div class="history-item-header">
+                        <span class="history-item-time">${todayDate} ${timeStr}</span>
+                        <span class="history-item-status">WIN</span>
+                    </div>
+                    <div class="history-item-details">
+                        <span class="history-item-pair">${currentMarket}</span>
+                    </div>
+                `;
+                
+                historyList.appendChild(historyItem);
+            }
+            
+            historyModal.classList.add('active');
+        }
+
+        // Close history modal
+        closeHistoryModal.addEventListener('click', function() {
+            historyModal.classList.remove('active');
+        });
+
+        historyModal.addEventListener('click', function(e) {
+            if (e.target === historyModal) {
+                historyModal.classList.remove('active');
+            }
+        });
+
+        currentBtn.addEventListener('click', function () {
+            listEl.classList.toggle('is-open');
+        });
+         currentBtn1.addEventListener('click', function () {
+            listE2.classList.toggle('is-open');
+        });
+
+        listEl.addEventListener('click', function (e) {
+            const item = e.target.closest('.market-item');
+            if (!item) return;
+        
+            listEl.querySelectorAll('.market-item.active')
+                .forEach(el => el.classList.remove('active'));
+        
+            item.classList.add('active');
+        
+            marketText.textContent = item.dataset.value;
+            marketInput.value = item.dataset.value;
+        
+            listEl.classList.remove('is-open');
+        });
+
+
+
+        listE2.addEventListener('click', function (e) {
+            const item = e.target.closest('.market-item-1');
+            if (!item) return;
+        
+            listE2.querySelectorAll('.market-item-1.active')
+                .forEach(el => el.classList.remove('active'));
+        
+            item.classList.add('active');
+        
+            timeText.textContent = item.innerText;
+            timeInput.value = item.innerText;
+        
+            listE2.classList.remove('is-open');
+        });
+
+
+        
+        document.addEventListener('click', function (e) {
+            if (!e.target.closest('.select-option-1')) {
+                listEl.classList.remove('is-open');
+                listE2.classList.remove('is-open');
+            }
+        });
+    </script>
+
+</body></html>
